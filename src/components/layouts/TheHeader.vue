@@ -23,6 +23,7 @@
         </ul>
         <!-- 入口组件 -->
         <div class="navbar-right">
+          <SearchInput/>
           <TheEntry/>
         </div>
       </div>
@@ -33,11 +34,13 @@
 <script>
 // 引入 TheEntry.vue 的默认值
 import TheEntry from '@/components/layouts/TheEntry'
+import SearchInput from '@/components/layouts/SearchInput'
 
 export default {
   name: 'TheHeader',
   components: {
-    TheEntry
+    TheEntry,
+    SearchInput
   },
   data() {
     return {

@@ -2,13 +2,18 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import ls from '../utils/localStorage'
 import router from '../router'
+import * as moreActions from './actions'
+import * as moreGetters from './getters'
 
 Vue.use(Vuex)
 
 const state = {
   user: ls.getItem('user'),
   // 添加 auth 来保存当前用户的登录状态
-  auth: ls.getItem('auth')
+  auth: ls.getItem('auth'),
+  articles: ls.getItem('articles'),
+  searchValue: '',
+  origin: location.origin.indexOf('github.io') !== -1 ? `${location.origin}/vuejs-essential/dist` : location.origin
 }
 
 const mutations = {
@@ -20,6 +25,13 @@ const mutations = {
   UPDATE_AUTH(state, auth) {
     state.auth = auth
     ls.setItem('auth', auth)
+  },
+  UPDATE_ARTICLES(state, articles) {
+    state.articles = articles
+    ls.setItem('articles', articles)
+  },
+  UPDATE_SEARCH_VALUE(state, searchValue) {
+    state.searchValue = searchValue
   }
 }
 
@@ -43,11 +55,28 @@ const actions = {
     }
 
     commit('UPDATE_USER', user)
-  }
+  },
+  ...moreActions
+}
+
+const getters = {
+  getArticleById: (state) => (id) => {
+    let articles = getters.computedArticles
+
+    if (Array.isArray(articles)) {
+      articles = articles.filter(article => parseInt(id) === parseInt(article.articleId))
+      return articles.length ? articles[0] : null
+    } else {
+      return null
+    }
+  },
+
+  ...moreGetters
 }
 
 const store = new Vuex.Store({
   state,
+  getters,
   mutations,
   actions
 })
